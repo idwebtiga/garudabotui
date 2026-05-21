@@ -4,6 +4,7 @@ import { Button } from '@/components/ui/button'
 import { FeatureCard } from '@/components/ui/feature-card'
 import { scrollByPages } from '@/lib/scroll'
 import { TIERS } from '@/lib/format'
+import { config } from '@/lib/config'
 
 const problemStatements = [
   { icon: '🌍', text: 'AI governance is centralized, leaving communities without a meaningful voice' },
@@ -143,9 +144,15 @@ function Content1() {
           <p className="mt-3 text-xs text-neutral-500">
             No tokens? No problem. You can still chat freely.
           </p>
-          <Button variant="robot-amber" size="md" className="mt-5">
-            Get GARUDA Tokens →
-          </Button>
+          <a
+            href={`https://pancakeswap.finance/swap?outputCurrency=${config.chain.tokenAddress}`}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <Button variant="robot-amber" size="md" className="mt-5">
+              Get GARUDA Tokens →
+            </Button>
+          </a>
         </div>
       </section>
 
@@ -196,9 +203,10 @@ function Content1() {
       <footer className="flex flex-col items-center justify-center gap-3 border-t border-robot-800 px-4 py-8 text-xs text-neutral-500 text-center">
         <p className="font-semibold text-neutral-400">Garuda BOT</p>
         <div className="flex items-center gap-4">
-          <a href="https://github.com" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">GitHub</a>
-          <a href="https://x.com" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">X / Twitter</a>
+          <a href="https://github.com/idwebtiga/garudabotui" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">GitHub</a>
+          <a href="https://x.com/garudabot_" target="_blank" rel="noopener noreferrer" className="hover:text-white transition-colors">X / Twitter</a>
         </div>
+        <p className="font-mono text-[10px] text-neutral-600">v{__COMMIT_HASH__}</p>
         <p>GARUDA tokens are a governance utility. This is not financial advice.</p>
       </footer>
     </>
