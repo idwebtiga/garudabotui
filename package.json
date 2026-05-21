@@ -8,7 +8,8 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "openapi": "openapi-typescript openapi.json -o src/openapi.d.ts"
+    "openapi": "openapi-typescript openapi.json -o src/openapi.d.ts",
+    "deploy": "rm -rf ../express-base/client-dist && mv dist client-dist && mv client-dist ../express-base/"
   },
   "dependencies": {
     "@radix-ui/react-dialog": "^1.1.15",
