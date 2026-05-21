@@ -1,0 +1,7 @@
+export { default as Page1 } from './page-1'
+export { default as Page2 } from './page-2'
+export { default as Page3 } from './page-3'
+export { default as PageIdea } from './page-idea'
+export { default as Content1 } from './content-1'
+export { default as Content2 } from './content-2'
+export { default as Content3 } from './content-3'
