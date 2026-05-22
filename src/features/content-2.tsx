@@ -5,9 +5,11 @@ import { useAuth } from '@/hooks/use-auth'
 import { useChat } from '@/hooks/use-chat'
 import { scrollByPages } from '@/lib/scroll'
 import { TIER_LABELS, TIER_WEIGHTS, truncateAddress, formatTime, getTier, formatBalance } from '@/lib/format'
+import ContentAuth from './content-auth'
 
 function Content2() {
-  const { setShowLogin, user } = useAuth()
+  const { user } = useAuth()
+  const [view, setView] = useState<'chat' | 'auth'>('chat')
   const chat = useChat()
   const { loadMessages } = chat
   const [input, setInput] = useState('')
@@ -26,12 +28,23 @@ function Content2() {
   }
 
   const chatRef = useRef<HTMLDivElement>(null)
+  const inputRef = useRef<HTMLInputElement>(null)
 
   useEffect(() => {
     if (chatRef.current) {
       chatRef.current.scrollTop = chatRef.current.scrollHeight
     }
   }, [chat.messages])
+
+  useEffect(() => {
+    if (!chat.sending && inputRef.current) {
+      inputRef.current.focus()
+    }
+  }, [chat.sending])
+
+  if (view === 'auth') {
+    return <ContentAuth onBack={() => setView('chat')} />
+  }
 
   return (
     <div className="flex h-full w-full flex-col">
@@ -72,14 +85,14 @@ function Content2() {
               {TIER_LABELS[getTier(tokenBalance)]}
             </span>
             <button
-              onClick={() => setShowLogin(true)}
+              onClick={() => setView('auth')}
               className="cursor-pointer rounded-lg px-2.5 py-1.5 text-xs text-robot-300 transition-colors hover:bg-robot-800 hover:text-red-400"
             >
               ⚡ Profile
             </button>
           </div>
         ) : (
-          <Button variant="robot" size="sm" onClick={() => setShowLogin(true)}>
+          <Button variant="robot" size="sm" onClick={() => setView('auth')}>
             ⚡ Sign In
           </Button>
         )}
@@ -111,6 +124,7 @@ function Content2() {
       <div className="border-t border-robot-800 p-4">
         <div className="flex gap-2">
           <input
+            ref={inputRef}
             type="text"
             placeholder={isAuthed ? 'Shape the conversation...' : 'Type a message...'}
             className="flex-1 rounded-xl bg-robot-800 px-4 py-2.5 text-sm text-white outline-none placeholder:text-robot-300 ring-1 ring-robot-700 focus:ring-primary-400 transition-all"

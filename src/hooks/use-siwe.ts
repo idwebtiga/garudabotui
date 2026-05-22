@@ -71,7 +71,7 @@ export function useSiwe() {
         chainId: CHAIN_ID,
         domain: window.location.host,
         nonce,
-        statement: 'Sign in with Ethereum to VIBE',
+        statement: 'Sign in with Ethereum Wallet',
         uri: window.location.origin,
         version: '1',
       })

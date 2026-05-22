@@ -2,8 +2,6 @@ import { Routes, Route } from 'react-router-dom'
 import { Page1, Page2, Page3, PageIdea } from '@/features'
 import { SwipeablePages } from '@/components/layout/swipeable-pages'
 import { RightSwipeable } from '@/components/layout/right-swipeable'
-import { LoginSIWE } from '@/components/auth/LoginSIWE'
-import { useAuth } from '@/hooks/use-auth'
 import Content1 from '@/features/content-1'
 import Content2 from '@/features/content-2'
 import Content3 from '@/features/content-3'
@@ -34,11 +32,8 @@ function HomeLayout() {
 }
 
 function App() {
-  const { showLogin, setShowLogin } = useAuth()
-
   return (
     <main className="h-dvh w-dvw overflow-hidden">
-      <LoginSIWE open={showLogin} onClose={() => setShowLogin(false)} />
       <Routes>
         <Route path="/" element={<HomeLayout />} />
         <Route path="/idea" element={<PageIdea />} />

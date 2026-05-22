@@ -67,28 +67,6 @@ export function useDragScroll(
   useEffect(() => {
     const el = containerRef.current
     if (!el) return
-
-    const onKeyDown = (e: KeyboardEvent) => {
-      if (e.key === 'ArrowRight') {
-        e.preventDefault()
-        const next = Math.min(currentPage + 1, totalPages - 1)
-        el.scrollTo({ left: next * el.clientWidth, behavior: 'smooth' })
-        setCurrentPage(next)
-      } else if (e.key === 'ArrowLeft') {
-        e.preventDefault()
-        const prev = Math.max(currentPage - 1, 0)
-        el.scrollTo({ left: prev * el.clientWidth, behavior: 'smooth' })
-        setCurrentPage(prev)
-      }
-    }
-
-    el.addEventListener('keydown', onKeyDown)
-    return () => el.removeEventListener('keydown', onKeyDown)
-  }, [containerRef, currentPage, totalPages])
-
-  useEffect(() => {
-    const el = containerRef.current
-    if (!el) return
     el.addEventListener('scroll', updatePage, { passive: true })
     return () => el.removeEventListener('scroll', updatePage)
   }, [containerRef, updatePage])

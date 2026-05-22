@@ -9,8 +9,6 @@ import { getAccessToken } from '@/lib/api/client'
 
 export interface AuthState {
   loading: boolean
-  setShowLogin: (show: boolean) => void
-  showLogin: boolean
   updateUser: (user: User) => void
   user: null | User
 }
@@ -20,7 +18,6 @@ export const AuthContext = createContext<AuthState | null>(null)
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<null | User>(null)
   const [loading, setLoading] = useState(true)
-  const [showLogin, setShowLogin] = useState(false)
 
   useEffect(() => {
     const token = getAccessToken()
@@ -40,7 +37,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUser(newUser)
   }
 
-  const value = { loading, setShowLogin, showLogin, updateUser, user }
+  const value = { loading, updateUser, user }
 
   return (
     <AuthContext.Provider value={value}>
