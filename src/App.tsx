@@ -1,10 +1,6 @@
 import { Routes, Route } from 'react-router-dom'
-import { Page1, Page2, Page3, PageIdea } from '@/features'
-import { SwipeablePages } from '@/components/layout/swipeable-pages'
-import { RightSwipeable } from '@/components/layout/right-swipeable'
-import Content1 from '@/features/content-1'
-import Content2 from '@/features/content-2'
-import Content3 from '@/features/content-3'
+import { Page1, Page2, Page3, ContentLandingPage, ContentChatBox, ContentTabPages } from '@/features'
+import { SwipeablePages, RightSwipeable } from '@/components/layout'
 
 function HomeLayout() {
   return (
@@ -18,12 +14,12 @@ function HomeLayout() {
       </div>
       <div className="hidden lg:flex h-dvh w-dvw">
         <div className="w-1/2 h-dvh overflow-y-auto scrollbar-hide bg-robot-950">
-          <Content1 />
+          <ContentLandingPage />
         </div>
         <div className="w-1/2 h-dvh border-l border-robot-800">
           <RightSwipeable>
-            <Content2 />
-            <Content3 />
+            <ContentChatBox />
+            <ContentTabPages />
           </RightSwipeable>
         </div>
       </div>
@@ -36,7 +32,6 @@ function App() {
     <main className="h-dvh w-dvw overflow-hidden">
       <Routes>
         <Route path="/" element={<HomeLayout />} />
-        <Route path="/idea" element={<PageIdea />} />
       </Routes>
     </main>
   )

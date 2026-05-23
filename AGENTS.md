@@ -9,20 +9,19 @@
 ```
 src/
 ├── components/
-│   ├── ui/           # Shared UI components (Button, Card, etc.)
-│   └── layout/       # Layout components (Container, Stack, Grid, PageShell, SwipeablePages)
+│   ├── ui/           # Shared UI components (Button, ChatBubble, FeatureCard)
+│   └── layout/       # Layout components (PageShell, SwipeablePages, RightSwipeable)
 ├── features/         # Page sections / feature-level components
-│   └── index.ts      # Barrel: Page1, Page2, Page3, PageIdea, Content1, Content2, Content3
+│   └── index.ts      # Barrel: Page1, Page2, Page3, ContentLandingPage, ContentChatBox, ContentTabPages
 ├── hooks/            # Custom React hooks
 ├── lib/
 │   ├── utils.ts      # cn() — clsx + tailwind-merge
 │   ├── format.ts     # Shared: truncateAddress, formatBalance, formatTime, getTier, TIERS
 │   ├── scroll.ts     # Shared: scrollByPages(direction)
 │   ├── api/          # API layer (openapi-fetch client, auth, chat, snapshots)
-│   └── data/         # Dummy data (leaderboard, messages, etc.)
-├── styles/           # Global styles (if needed beyond index.css)
+│   └── config.ts     # Environment config
+├── context/          # React context providers (AuthContext)
 ├── types/            # Shared TypeScript types
-│   └── index.ts      # PolymorphicProps helper
 ├── App.tsx           # Route definitions
 └── main.tsx          # Entry point (BrowserRouter wrapper)
 ```
@@ -34,24 +33,18 @@ Every page is a `PageShell` + `ContentN` component:
 
 ```
 features/
-├── page-1.tsx         → PageShell("flex-col overflow-y-auto ...") → Content1
-├── page-2.tsx         → PageShell("flex-col ...")                 → Content2
-├── page-3.tsx         → PageShell(...)                            → Content3
-├── content-1.tsx      → Landing page (chatbot MVP)
-├── content-2.tsx      → Chat box
-├── content-3.tsx      → Leaderboard + Analytics tabs
-└── index.ts           → barrel: Page1, Page2, Page3, PageIdea, Content1, Content2, Content3
+├── page-1.tsx         → PageShell("flex-col overflow-y-auto ...") → ContentLandingPage
+├── page-2.tsx         → PageShell("flex-col ...")                 → ContentChatBox
+├── page-3.tsx         → PageShell(...)                            → ContentTabPages
+├── content-landingpage.tsx  → Landing page (chatbot MVP)
+├── content-chatbox.tsx      → Chat box
+├── content-tabpages.tsx     → Leaderboard + Analytics tabs
+└── index.ts           → barrel: Page1, Page2, Page3, ContentLandingPage, ContentChatBox, ContentTabPages
 ```
 
 ## Page Theming
-Each page uses a different theme token palette:
-| Page | Theme token | Background |
-|---|---|---|
-| Page 1 | `neutral-*` | `bg-neutral-950` (dark landing) |
-| Page 2 | `primary-*` | `bg-primary-600` (blue chat) |
-| Page 3 | `secondary-*` | `bg-secondary-600` (purple tabs) |
-
-When adding content to a page, use the page's theme token family for borders, backgrounds, and text.
+All pages use the `robot-*` theme token palette (`bg-robot-950`, `border-robot-800`, `text-robot-300`, etc.).
+Use `primary-*` and `amber-*` tokens for accent/CTA elements.
 
 ## Conventions
 
@@ -77,19 +70,14 @@ When adding content to a page, use the page's theme token family for borders, ba
 ### Available UI components
 All in `src/components/ui/` with barrel export:
 - `Button` — variants: primary, secondary, outline, ghost, danger, **inverted**, **outline-inverted**, **robot**, **robot-amber**. Sizes: sm, md, lg
-- `Card` + CardHeader, CardTitle, CardDescription, CardContent, CardFooter
-- `Avatar` — colored circle with initials (`name`, `colorClass` props)
 - `ChatBubble` — chat message (`side: 'left' | 'right'`, `text`)
-- `StatCard` — metric display (`label`, `value`, `className` for theme)
 - `FeatureCard` — icon + title + description card
 
 ### Available layout components
 All in `src/components/layout/` with barrel export:
 - `PageShell` — snap-aware page wrapper (add `flex-col`, bg, scroll classes via `className`)
 - `SwipeablePages` — horizontal scroll-snap container (wraps all pages)
-- `Container` — responsive max-width wrapper
-- `Stack` — flexbox with direction, gap, align, justify props
-- `Grid` — responsive CSS grid with cols prop per breakpoint
+- `RightSwipeable` — dynamic snap-scroll container (uses `Children.count` for page count)
 
 ### Tailwind CSS v4
 - Theme tokens defined in `src/index.css` via `@theme` block — DO NOT use `tailwind.config.js`

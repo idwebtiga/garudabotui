@@ -1,4 +1,4 @@
-import { useRef } from 'react'
+import { Children, useRef } from 'react'
 import type { ReactNode } from 'react'
 import { useDragScroll } from '@/hooks/use-drag-scroll'
 
@@ -9,7 +9,7 @@ interface SwipeablePagesProps {
 function SwipeablePages({ children }: SwipeablePagesProps) {
   const containerRef = useRef<HTMLDivElement>(null)
 
-  useDragScroll(containerRef, 3)
+  useDragScroll(containerRef, Children.count(children))
 
   return (
     <div className="relative h-dvh w-full">

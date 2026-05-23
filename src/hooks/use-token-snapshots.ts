@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import type { SnapshotItem } from '@/lib/api/types'
 
@@ -9,21 +9,10 @@ export function useTokenSnapshots() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<null | string>(null)
 
-  const fetch = useCallback(async () => {
-    try {
-      const data = await getTokenSnapshots()
-      setSnapshots(data.snapshots)
-    } catch (err) {
-      setError('Failed to load snapshots')
-      console.error(err)
-    } finally {
-      setLoading(false)
-    }
-  }, [])
-
   useEffect(() => {
     let cancelled = false
-    ;(async () => {
+
+    const fetchData = async () => {
       try {
         const data = await getTokenSnapshots()
         if (!cancelled) setSnapshots(data.snapshots)
@@ -35,24 +24,16 @@ export function useTokenSnapshots() {
       } finally {
         if (!cancelled) setLoading(false)
       }
-    })()
-    return () => { cancelled = true }
+    }
+
+    fetchData()
+
+    const interval = setInterval(fetchData, 60000)
+    return () => {
+      cancelled = true
+      clearInterval(interval)
+    }
   }, [])
-
-  useEffect(() => {
-    const interval = setInterval(async () => {
-      setLoading(true)
-      setError(null)
-      try {
-        await fetch()
-      } catch (err) {
-        setError('Failed to refresh snapshots')
-        console.error(err)
-      }
-    }, 60000)
-
-    return () => clearInterval(interval)
-  }, [fetch])
 
   return { error, loading, snapshots }
 }

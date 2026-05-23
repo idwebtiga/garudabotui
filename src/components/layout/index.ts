@@ -1,5 +1,3 @@
-export { Container } from './container'
-export { Stack } from './stack'
-export { Grid } from './grid'
 export { SwipeablePages } from './swipeable-pages'
 export { PageShell } from './page-shell'
+export { RightSwipeable } from './right-swipeable'
