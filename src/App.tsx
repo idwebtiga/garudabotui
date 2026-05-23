@@ -1,15 +1,21 @@
 import { Routes, Route } from 'react-router-dom'
-import { Page1, Page2, Page3, ContentLandingPage, ContentChatBox, ContentTabPages } from '@/features'
-import { SwipeablePages, RightSwipeable } from '@/components/layout'
+import { ContentLandingPage, ContentChatBox, ContentTabPages } from '@/features'
+import { SwipeablePages, RightSwipeable, PageShell } from '@/components/layout'
 
 function HomeLayout() {
   return (
     <>
       <div className="lg:hidden">
         <SwipeablePages>
-          <Page1 />
-          <Page2 />
-          <Page3 />
+          <PageShell className="overflow-y-auto scrollbar-hide bg-robot-950">
+            <ContentLandingPage />
+          </PageShell>
+          <PageShell className="bg-robot-950">
+            <ContentChatBox />
+          </PageShell>
+          <PageShell className="bg-robot-950">
+            <ContentTabPages />
+          </PageShell>
         </SwipeablePages>
       </div>
       <div className="hidden lg:flex h-dvh w-dvw">

@@ -7,7 +7,7 @@ import { scrollByPages } from '@/lib/scroll'
 import { TIER_LABELS, TIER_WEIGHTS, truncateAddress, formatTime, getTier, formatBalance } from '@/lib/format'
 import ContentAuth from './content-auth'
 
-function Content2() {
+function ChatBox() {
   const { user } = useAuth()
   const [view, setView] = useState<'chat' | 'auth'>('chat')
   const chat = useChat()
@@ -147,4 +147,4 @@ function Content2() {
   )
 }
 
-export default Content2
+export default ChatBox

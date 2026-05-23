@@ -12,7 +12,7 @@ src/
 │   ├── ui/           # Shared UI components (Button, ChatBubble, FeatureCard)
 │   └── layout/       # Layout components (PageShell, SwipeablePages, RightSwipeable)
 ├── features/         # Page sections / feature-level components
-│   └── index.ts      # Barrel: Page1, Page2, Page3, ContentLandingPage, ContentChatBox, ContentTabPages
+│   └── index.ts      # Barrel: ContentLandingPage, ContentChatBox, ContentTabPages
 ├── hooks/            # Custom React hooks
 ├── lib/
 │   ├── utils.ts      # cn() — clsx + tailwind-merge
@@ -33,13 +33,10 @@ Every page is a `PageShell` + `ContentN` component:
 
 ```
 features/
-├── page-1.tsx         → PageShell("flex-col overflow-y-auto ...") → ContentLandingPage
-├── page-2.tsx         → PageShell("flex-col ...")                 → ContentChatBox
-├── page-3.tsx         → PageShell(...)                            → ContentTabPages
 ├── content-landingpage.tsx  → Landing page (chatbot MVP)
 ├── content-chatbox.tsx      → Chat box
 ├── content-tabpages.tsx     → Leaderboard + Analytics tabs
-└── index.ts           → barrel: Page1, Page2, Page3, ContentLandingPage, ContentChatBox, ContentTabPages
+└── index.ts           → barrel: ContentLandingPage, ContentChatBox, ContentTabPages
 ```
 
 ## Page Theming

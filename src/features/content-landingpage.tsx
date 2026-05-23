@@ -29,7 +29,7 @@ const features = [
 
 const tierColors = ['text-robot-500', 'text-robot-400', 'text-robot-300', 'text-primary-400', 'text-amber-400', 'text-amber-500']
 
-function Content1() {
+function LandingPage() {
   const { displayed, done } = useTypewriter('Garuda BOT', 50)
 
   return (
@@ -106,12 +106,9 @@ function Content1() {
             Token holdings determine your influence tier and conversation weight.
           </p>
           <div className="mt-10 mx-auto max-w-xl">
-            <div className="grid grid-cols-4 gap-px rounded-xl overflow-hidden border border-robot-800 bg-robot-800 text-sm">
-              <div className="bg-robot-900 px-3 py-2 text-left text-xs font-medium uppercase tracking-wider text-neutral-400">
-                Tier
-              </div>
+            <div className="grid grid-cols-3 gap-px rounded-xl overflow-hidden border border-robot-800 bg-robot-800 text-sm">
               <div className="bg-robot-900 px-3 py-2 text-center text-xs font-medium uppercase tracking-wider text-neutral-400">
-                Stars
+                Tier
               </div>
               <div className="bg-robot-900 px-3 py-2 text-center text-xs font-medium uppercase tracking-wider text-neutral-400">
                 Weight
@@ -119,15 +116,11 @@ function Content1() {
               <div className="bg-robot-900 px-3 py-2 text-right text-xs font-medium uppercase tracking-wider text-neutral-400">
                 Tokens
               </div>
-              <div className="bg-robot-950 px-3 py-2.5 text-left text-neutral-400">0</div>
               <div className="bg-robot-950 px-3 py-2.5 text-center text-neutral-500">—</div>
               <div className="bg-robot-950 px-3 py-2.5 text-center text-neutral-500">×0</div>
               <div className="bg-robot-950 px-3 py-2.5 text-right text-neutral-500">0</div>
               {TIERS.slice(1).map((t, i) => (
                 <Fragment key={t.stars}>
-                  <div className={`px-3 py-2.5 text-left text-neutral-400 ${i % 2 === 1 ? 'bg-robot-950' : 'bg-robot-900/50'}`}>
-                    {t.tier}
-                  </div>
                   <div className={`px-3 py-2.5 text-center ${tierColors[t.tier]} ${i % 2 === 1 ? 'bg-robot-950' : 'bg-robot-900/50'}`}>
                     {t.stars}
                   </div>
@@ -213,4 +206,4 @@ function Content1() {
   )
 }
 
-export default Content1
+export default LandingPage
