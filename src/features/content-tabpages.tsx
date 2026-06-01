@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import GetToken from './content-gettoken'
+import Knowledge from './content-knowledge'
 import Leaderboard from './content-leaderboard'
 
 interface TabConfig {
@@ -11,6 +12,7 @@ interface TabConfig {
 
 const tabs: TabConfig[] = [
   { id: 'get-token', label: 'Get GARUDA', icon: '🪙', component: GetToken },
+  { id: 'knowledge', label: 'Knowledge', icon: '📚', component: Knowledge },
   { id: 'leaderboard', label: 'Leaderboard', icon: '👑', component: Leaderboard },
 ]
 

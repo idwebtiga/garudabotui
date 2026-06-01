@@ -121,6 +121,18 @@ function ChatBox() {
         ))}
       </div>
 
+      {chat.error && (
+        <div className="flex items-center gap-3 border-t border-red-900/50 bg-red-950/40 px-4 py-2.5">
+          <span className="text-sm text-red-400">{chat.error}</span>
+          <button
+            onClick={chat.loadMessages}
+            className="ml-auto cursor-pointer rounded-md bg-red-900/40 px-3 py-1 text-xs font-medium text-red-300 transition-colors hover:bg-red-800/50"
+          >
+            Retry
+          </button>
+        </div>
+      )}
+
       <div className="border-t border-robot-800 p-4">
         <div className="flex gap-2">
           <input

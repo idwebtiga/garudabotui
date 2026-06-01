@@ -190,6 +190,92 @@
           "userId"
         ]
       },
+      "DraftResponse": {
+        "type": "object",
+        "properties": {
+          "createdAt": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "string"
+              }
+            ]
+          },
+          "id": {
+            "type": "number"
+          },
+          "markdown": {
+            "type": "string"
+          },
+          "ownerId": {
+            "type": "number"
+          },
+          "title": {
+            "type": "string"
+          },
+          "updatedAt": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "required": [
+          "createdAt",
+          "id",
+          "markdown",
+          "ownerId",
+          "title",
+          "updatedAt"
+        ]
+      },
+      "DocumentResponse": {
+        "type": "object",
+        "properties": {
+          "content": {
+            "type": "string"
+          },
+          "createdAt": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "string"
+              }
+            ]
+          },
+          "id": {
+            "type": "number"
+          },
+          "title": {
+            "type": "string"
+          },
+          "updatedAt": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "required": [
+          "content",
+          "createdAt",
+          "id",
+          "title",
+          "updatedAt"
+        ]
+      },
       "CleanupResponse": {
         "type": "object",
         "properties": {
@@ -212,9 +298,6 @@
       "SnapshotItem": {
         "type": "object",
         "properties": {
-          "aiPersonality": {
-            "type": "string"
-          },
           "ethAddress": {
             "type": "string"
           },
@@ -235,7 +318,6 @@
           }
         },
         "required": [
-          "aiPersonality",
           "ethAddress",
           "formattedBalance",
           "percentage",
@@ -260,32 +342,6 @@
         "required": [
           "count",
           "snapshots"
-        ]
-      },
-      "GenerateResponse": {
-        "type": "object",
-        "properties": {
-          "count": {
-            "type": "number"
-          },
-          "snapshots": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/SnapshotItem"
-            }
-          },
-          "success": {
-            "type": "boolean"
-          },
-          "totalWeight": {
-            "type": "string"
-          }
-        },
-        "required": [
-          "count",
-          "snapshots",
-          "success",
-          "totalWeight"
         ]
       }
     },
@@ -509,6 +565,87 @@
         }
       }
     },
+    "/api/knowledge/drafts": {
+      "get": {
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "summary": "List all drafts for the current user",
+        "tags": [
+          "Knowledge"
+        ],
+        "responses": {
+          "200": {
+            "description": "Array of drafts",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/DraftResponse"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Not authenticated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/knowledge/documents": {
+      "get": {
+        "summary": "List all published documents (public)",
+        "tags": [
+          "Knowledge"
+        ],
+        "responses": {
+          "200": {
+            "description": "Array of documents",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/DocumentResponse"
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/settings/cleanup-stale-guests": {
       "post": {
         "summary": "Delete guest users whose last message is older than 24 hours",
@@ -552,36 +689,6 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/SnapshotListResponse"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/token-snapshot/generate": {
-      "post": {
-        "summary": "Generate a new token snapshot",
-        "tags": [
-          "Token Snapshots"
-        ],
-        "responses": {
-          "200": {
-            "description": "Generation result",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/GenerateResponse"
                 }
               }
             }

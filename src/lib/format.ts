@@ -18,7 +18,10 @@ export function formatBalance(s: string): string {
   const n = parseFloat(s.replace(/,/g, ''))
   if (n >= 1_000_000) return (n / 1_000_000).toFixed(2).replace(/\.?0+$/, '') + 'M'
   if (n >= 1_000) return (n / 1_000).toFixed(1).replace(/\.0$/, '') + 'K'
-  return String(Math.floor(n))
+  if (n >= 1) return n.toFixed(2).replace(/\.?0+$/, '')
+  if (n >= 0.01) return n.toFixed(4).replace(/\.?0+$/, '')
+  if (n > 0) return '< 0.01'
+  return '0'
 }
 
 export function formatTime(isoString?: string): string {

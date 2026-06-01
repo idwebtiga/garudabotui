@@ -8,6 +8,7 @@ import { getGuestToken, getUserInfo } from '@/lib/api/auth'
 import { getAccessToken } from '@/lib/api/client'
 
 export interface AuthState {
+  error: null | string
   loading: boolean
   updateUser: (user: User) => void
   user: null | User
@@ -17,6 +18,7 @@ export const AuthContext = createContext<AuthState | null>(null)
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<null | User>(null)
+  const [error, setError] = useState<null | string>(null)
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
@@ -24,11 +26,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     if (token) {
       getUserInfo()
         .then(setUser)
-        .catch(() => getGuestToken().then(setUser))
+        .catch(() => getGuestToken().then(setUser).catch(() => setError('Failed to create guest session')))
         .finally(() => setLoading(false))
     } else {
       getGuestToken()
         .then(setUser)
+        .catch(() => setError('Failed to create guest session'))
         .finally(() => setLoading(false))
     }
   }, [])
@@ -37,7 +40,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     setUser(newUser)
   }
 
-  const value = { loading, updateUser, user }
+  const value: AuthState = { error, loading, updateUser, user }
 
   return (
     <AuthContext.Provider value={value}>

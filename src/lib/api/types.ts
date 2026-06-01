@@ -1,5 +1,6 @@
 import type { components } from '@/openapi'
 
+export type Document = components['schemas']['DocumentResponse']
 export type Message = components['schemas']['ChatMessage']
 export type SnapshotItem = components['schemas']['SnapshotItem']
 export type SnapshotListResponse = components['schemas']['SnapshotListResponse']
