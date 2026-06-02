@@ -1,21 +1,43 @@
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 
-import type { Document } from '@/lib/api/types'
+import type { DocumentDetail, DocumentFeedItem } from '@/lib/api/types'
 
-import { getDocuments } from '@/lib/api/knowledge'
+import { getDocumentDetail, getDocumentFeed } from '@/lib/api/knowledge'
 
 export function useKnowledge() {
-  const [documents, setDocuments] = useState<Document[]>([])
+  const [documents, setDocuments] = useState<DocumentFeedItem[]>([])
   const [loading, setLoading] = useState(true)
+  const [loadingMore, setLoadingMore] = useState(false)
   const [error, setError] = useState<null | string>(null)
+  const [nextCursor, setNextCursor] = useState<number | null>(null)
+  const cursorRef = useRef<number | null>(null)
+
+  const loadMore = useCallback(async () => {
+    if (loadingMore || nextCursor === null) return
+    setLoadingMore(true)
+    try {
+      const data = await getDocumentFeed(nextCursor)
+      setDocuments((prev) => [...prev, ...data.documents])
+      setNextCursor(data.nextCursor)
+      cursorRef.current = data.nextCursor
+    } catch (err) {
+      console.error(err)
+    } finally {
+      setLoadingMore(false)
+    }
+  }, [loadingMore, nextCursor])
 
   useEffect(() => {
     let cancelled = false
 
-    const fetchData = async () => {
+    const fetchInitial = async () => {
       try {
-        const data = await getDocuments()
-        if (!cancelled) setDocuments(data)
+        const data = await getDocumentFeed()
+        if (!cancelled) {
+          setDocuments(data.documents)
+          setNextCursor(data.nextCursor)
+          cursorRef.current = data.nextCursor
+        }
       } catch (err) {
         if (!cancelled) {
           setError('Failed to load documents')
@@ -26,11 +48,48 @@ export function useKnowledge() {
       }
     }
 
-    fetchData()
+    fetchInitial()
     return () => {
       cancelled = true
     }
   }, [])
 
-  return { documents, error, loading }
+  return { documents, error, loading, loadingMore, loadMore, nextCursor }
+}
+
+export function useDocumentDetail() {
+  const [detail, setDetail] = useState<DocumentDetail | null>(null)
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<null | string>(null)
+  const abortRef = useRef<AbortController | null>(null)
+
+  const fetchDetail = useCallback(async (id: number) => {
+    abortRef.current?.abort()
+    const controller = new AbortController()
+    abortRef.current = controller
+
+    setLoading(true)
+    setError(null)
+    setDetail(null)
+    try {
+      const data = await getDocumentDetail(id)
+      if (!controller.signal.aborted) setDetail(data)
+    } catch (err) {
+      if (!controller.signal.aborted) {
+        setError('Failed to load document')
+        console.error(err)
+      }
+    } finally {
+      if (!controller.signal.aborted) setLoading(false)
+    }
+  }, [])
+
+  const clear = useCallback(() => {
+    abortRef.current?.abort()
+    setDetail(null)
+    setLoading(false)
+    setError(null)
+  }, [])
+
+  return { detail, loading, error, fetchDetail, clear }
 }

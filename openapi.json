@@ -136,7 +136,8 @@
         "properties": {
           "message": {
             "type": "string",
-            "minLength": 1
+            "minLength": 1,
+            "maxLength": 1000
           }
         },
         "required": [
@@ -190,50 +191,11 @@
           "userId"
         ]
       },
-      "DraftResponse": {
-        "type": "object",
-        "properties": {
-          "createdAt": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "string"
-              }
-            ]
-          },
-          "id": {
-            "type": "number"
-          },
-          "markdown": {
-            "type": "string"
-          },
-          "ownerId": {
-            "type": "number"
-          },
-          "title": {
-            "type": "string"
-          },
-          "updatedAt": {
-            "anyOf": [
-              {
-                "type": "string"
-              },
-              {
-                "type": "string"
-              }
-            ]
-          }
-        },
-        "required": [
-          "createdAt",
-          "id",
-          "markdown",
-          "ownerId",
-          "title",
-          "updatedAt"
-        ]
+      "ChatMessageList": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/ChatMessage"
+        }
       },
       "DocumentResponse": {
         "type": "object",
@@ -276,23 +238,117 @@
           "updatedAt"
         ]
       },
-      "CleanupResponse": {
+      "DocumentListResponse": {
+        "type": "array",
+        "items": {
+          "$ref": "#/components/schemas/DocumentResponse"
+        }
+      },
+      "DocumentFeedItem": {
         "type": "object",
         "properties": {
-          "deletedMessages": {
+          "createdAt": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "string"
+              }
+            ]
+          },
+          "emoji": {
+            "type": "string",
+            "nullable": true
+          },
+          "id": {
             "type": "number"
           },
-          "deletedUsers": {
-            "type": "number"
+          "stance": {
+            "type": "string",
+            "nullable": true
           },
-          "success": {
-            "type": "boolean"
+          "title": {
+            "type": "string"
+          },
+          "updatedAt": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "string"
+              }
+            ]
           }
         },
         "required": [
-          "deletedMessages",
-          "deletedUsers",
-          "success"
+          "createdAt",
+          "emoji",
+          "id",
+          "stance",
+          "title",
+          "updatedAt"
+        ]
+      },
+      "DocumentFeedResponse": {
+        "type": "object",
+        "properties": {
+          "documents": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/DocumentFeedItem"
+            }
+          },
+          "nextCursor": {
+            "type": "number",
+            "nullable": true
+          }
+        },
+        "required": [
+          "documents",
+          "nextCursor"
+        ]
+      },
+      "DocumentDetail": {
+        "type": "object",
+        "properties": {
+          "content": {
+            "type": "string"
+          },
+          "createdAt": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "string"
+              }
+            ]
+          },
+          "id": {
+            "type": "number"
+          },
+          "title": {
+            "type": "string"
+          },
+          "updatedAt": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "string"
+              }
+            ]
+          }
+        },
+        "required": [
+          "content",
+          "createdAt",
+          "id",
+          "title",
+          "updatedAt"
         ]
       },
       "SnapshotItem": {
@@ -337,11 +393,19 @@
             "items": {
               "$ref": "#/components/schemas/SnapshotItem"
             }
+          },
+          "success": {
+            "type": "boolean"
+          },
+          "totalWeight": {
+            "type": "string"
           }
         },
         "required": [
           "count",
-          "snapshots"
+          "snapshots",
+          "success",
+          "totalWeight"
         ]
       }
     },
@@ -534,64 +598,13 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/ChatMessage"
-                  }
+                  "$ref": "#/components/schemas/ChatMessageList"
                 }
               }
             }
           },
           "400": {
             "description": "Access denied",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          },
-          "500": {
-            "description": "Internal error",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/knowledge/drafts": {
-      "get": {
-        "security": [
-          {
-            "bearerAuth": []
-          }
-        ],
-        "summary": "List all drafts for the current user",
-        "tags": [
-          "Knowledge"
-        ],
-        "responses": {
-          "200": {
-            "description": "Array of drafts",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/DraftResponse"
-                  }
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Not authenticated",
             "content": {
               "application/json": {
                 "schema": {
@@ -625,10 +638,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/DocumentResponse"
-                  }
+                  "$ref": "#/components/schemas/DocumentListResponse"
                 }
               }
             }
@@ -646,19 +656,19 @@
         }
       }
     },
-    "/api/settings/cleanup-stale-guests": {
-      "post": {
-        "summary": "Delete guest users whose last message is older than 24 hours",
+    "/api/knowledge/documents/feed": {
+      "get": {
+        "summary": "Paginated document feed (infinite scroll)",
         "tags": [
-          "Settings"
+          "Knowledge"
         ],
         "responses": {
           "200": {
-            "description": "Stale guest cleanup result",
+            "description": "Paginated document feed with stance and emoji",
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/CleanupResponse"
+                  "$ref": "#/components/schemas/DocumentFeedResponse"
                 }
               }
             }
@@ -676,7 +686,57 @@
         }
       }
     },
-    "/api/token-snapshot/": {
+    "/api/knowledge/documents/{id}": {
+      "get": {
+        "summary": "Get document detail with full content",
+        "tags": [
+          "Knowledge"
+        ],
+        "responses": {
+          "200": {
+            "description": "Document detail with content",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DocumentDetail"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid ID",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/token-snapshot": {
       "get": {
         "summary": "List token snapshots",
         "tags": [

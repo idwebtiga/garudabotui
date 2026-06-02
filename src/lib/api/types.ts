@@ -8,3 +8,6 @@ export type User = components['schemas']['AuthUser'] & {
   tokenBalance?: components['schemas']['TokenBalance']
 }
 export type UserInfoResponse = components['schemas']['UserInfoResponse']
+export type DocumentFeedItem = components['schemas']['DocumentFeedItem']
+export type DocumentFeedResponse = components['schemas']['DocumentFeedResponse']
+export type DocumentDetail = components['schemas']['DocumentDetail']

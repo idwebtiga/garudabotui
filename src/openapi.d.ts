@@ -236,64 +236,10 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["ChatMessage"][];
+                        "application/json": components["schemas"]["ChatMessageList"];
                     };
                 };
                 /** @description Access denied */
-                400: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["ErrorResponse"];
-                    };
-                };
-                /** @description Internal error */
-                500: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["ErrorResponse"];
-                    };
-                };
-            };
-        };
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/knowledge/drafts": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** List all drafts for the current user */
-        get: {
-            parameters: {
-                query?: never;
-                header?: never;
-                path?: never;
-                cookie?: never;
-            };
-            requestBody?: never;
-            responses: {
-                /** @description Array of drafts */
-                200: {
-                    headers: {
-                        [name: string]: unknown;
-                    };
-                    content: {
-                        "application/json": components["schemas"]["DraftResponse"][];
-                    };
-                };
-                /** @description Not authenticated */
                 400: {
                     headers: {
                         [name: string]: unknown;
@@ -344,7 +290,7 @@ export interface paths {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["DocumentResponse"][];
+                        "application/json": components["schemas"]["DocumentListResponse"];
                     };
                 };
                 /** @description Internal error */
@@ -366,17 +312,15 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/settings/cleanup-stale-guests": {
+    "/api/knowledge/documents/feed": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        get?: never;
-        put?: never;
-        /** Delete guest users whose last message is older than 24 hours */
-        post: {
+        /** Paginated document feed (infinite scroll) */
+        get: {
             parameters: {
                 query?: never;
                 header?: never;
@@ -385,13 +329,13 @@ export interface paths {
             };
             requestBody?: never;
             responses: {
-                /** @description Stale guest cleanup result */
+                /** @description Paginated document feed with stance and emoji */
                 200: {
                     headers: {
                         [name: string]: unknown;
                     };
                     content: {
-                        "application/json": components["schemas"]["CleanupResponse"];
+                        "application/json": components["schemas"]["DocumentFeedResponse"];
                     };
                 };
                 /** @description Internal error */
@@ -405,13 +349,78 @@ export interface paths {
                 };
             };
         };
+        put?: never;
+        post?: never;
         delete?: never;
         options?: never;
         head?: never;
         patch?: never;
         trace?: never;
     };
-    "/api/token-snapshot/": {
+    "/api/knowledge/documents/{id}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** Get document detail with full content */
+        get: {
+            parameters: {
+                query?: never;
+                header?: never;
+                path?: never;
+                cookie?: never;
+            };
+            requestBody?: never;
+            responses: {
+                /** @description Document detail with content */
+                200: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["DocumentDetail"];
+                    };
+                };
+                /** @description Invalid ID */
+                400: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Not found */
+                404: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+                /** @description Internal error */
+                500: {
+                    headers: {
+                        [name: string]: unknown;
+                    };
+                    content: {
+                        "application/json": components["schemas"]["ErrorResponse"];
+                    };
+                };
+            };
+        };
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/token-snapshot": {
         parameters: {
             query?: never;
             header?: never;
@@ -500,14 +509,7 @@ export interface components {
             updatedAt?: string;
             userId: number;
         };
-        DraftResponse: {
-            createdAt: string;
-            id: number;
-            markdown: string;
-            ownerId: number;
-            title: string;
-            updatedAt: string;
-        };
+        ChatMessageList: components["schemas"]["ChatMessage"][];
         DocumentResponse: {
             content: string;
             createdAt: string;
@@ -515,10 +517,25 @@ export interface components {
             title: string;
             updatedAt: string;
         };
-        CleanupResponse: {
-            deletedMessages: number;
-            deletedUsers: number;
-            success: boolean;
+        DocumentListResponse: components["schemas"]["DocumentResponse"][];
+        DocumentFeedItem: {
+            createdAt: string;
+            emoji: string | null;
+            id: number;
+            stance: string | null;
+            title: string;
+            updatedAt: string;
+        };
+        DocumentFeedResponse: {
+            documents: components["schemas"]["DocumentFeedItem"][];
+            nextCursor: number | null;
+        };
+        DocumentDetail: {
+            content: string;
+            createdAt: string;
+            id: number;
+            title: string;
+            updatedAt: string;
         };
         SnapshotItem: {
             ethAddress: string;
@@ -531,6 +548,8 @@ export interface components {
         SnapshotListResponse: {
             count: number;
             snapshots: components["schemas"]["SnapshotItem"][];
+            success: boolean;
+            totalWeight: string;
         };
     };
     responses: never;

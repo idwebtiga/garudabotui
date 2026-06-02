@@ -100,7 +100,7 @@ function GetToken() {
 
         <div className="grid grid-cols-2 gap-2">
           <a
-            href={`https://dexscreener.com/bsc/${tokenAddress}`}
+            href={`https://www.geckoterminal.com/bsc/pools/${tokenAddress}`}
             target="_blank"
             rel="noopener noreferrer"
             className="flex items-center justify-center gap-1.5 rounded-lg bg-robot-800 py-2.5 text-xs text-robot-300 transition-colors hover:bg-robot-700 hover:text-white"
