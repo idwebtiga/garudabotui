@@ -21,7 +21,7 @@ export async function getDocumentFeed(cursor?: number): Promise<DocumentFeedResp
 
 export async function getDocumentDetail(id: number): Promise<DocumentDetail> {
   const { data, error } = await client.GET('/api/knowledge/documents/{id}', {
-    params: { path: { id } },
+    params: { path: { id } } as never,
   })
   if (error) handleApiError(error, 'Failed to fetch document')
   if (!data) throw new ApiError('Empty response from server')

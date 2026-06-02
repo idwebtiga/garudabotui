@@ -6,24 +6,23 @@ import { scrollByPages } from '@/lib/scroll'
 import { formatTime } from '@/lib/format'
 
 const markdownComponents = {
-  strong: ({ children }: { children: React.ReactNode }) => (
+  strong: ({ children }: { children?: React.ReactNode }) => (
     <strong className="font-bold text-white">{children}</strong>
   ),
-  em: ({ children }: { children: React.ReactNode }) => (
+  em: ({ children }: { children?: React.ReactNode }) => (
     <em className="italic text-primary-300">{children}</em>
   ),
-  code: ({ className, children, ...props }: React.HTMLAttributes<HTMLElement> & { className?: string; children?: React.ReactNode }) => {
+  code: ({ className, children }: { className?: string; children?: React.ReactNode }) => {
     const isInline = !className
     return isInline ? (
       <code
         className="rounded bg-robot-800 px-1 py-0.5 text-primary-300 text-xs font-mono"
-        {...props}
       >
         {children}
       </code>
     ) : (
       <pre className="my-2 overflow-x-auto rounded-lg bg-robot-950 p-3 text-xs font-mono text-primary-300">
-        <code className="block" {...props}>
+        <code className="block">
           {children}
         </code>
       </pre>
@@ -42,20 +41,20 @@ const markdownComponents = {
       {children}
     </a>
   ),
-  table: ({ children }: { children: React.ReactNode }) => (
+  table: ({ children }: { children?: React.ReactNode }) => (
     <div className="my-2 overflow-x-auto">
       <table className="w-full text-xs border-collapse">{children}</table>
     </div>
   ),
-  th: ({ children }: { children: React.ReactNode }) => (
+  th: ({ children }: { children?: React.ReactNode }) => (
     <th className="border border-robot-600 px-2 py-1 text-left font-medium">
       {children}
     </th>
   ),
-  td: ({ children }: { children: React.ReactNode }) => (
+  td: ({ children }: { children?: React.ReactNode }) => (
     <td className="border border-robot-600 px-2 py-1">{children}</td>
   ),
-  blockquote: ({ children }: { children: React.ReactNode }) => (
+  blockquote: ({ children }: { children?: React.ReactNode }) => (
     <blockquote className="my-2 border-l-2 border-primary-400 pl-3 text-neutral-400 italic">
       {children}
     </blockquote>
